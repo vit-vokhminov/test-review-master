@@ -12,6 +12,8 @@ type InputNewTodoState = {
 }
 
 export class InputNewTodo extends React.Component<InputNewTodoProps, InputNewTodoState> {
+    // компонент есть input, из рода UI, негоже UI компонту знать об истоках бытия
+    // аналогично UserSelect, компонт должен принимать данные и callback
     componentDidUpdate(prevProps: Readonly<InputNewTodoProps>, prevState: Readonly<InputNewTodoState>, snapshot?: any) {
         if (this.props.todoTitle !== prevProps.todoTitle) {
             this.setState({value: this.props.todoTitle})
@@ -21,12 +23,13 @@ export class InputNewTodo extends React.Component<InputNewTodoProps, InputNewTod
     handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.props.onChange(e.target.value);
     }
-
+    // решение с двумя событиями на одном элементе приводит к узкой специализации данного компонента
+    // его больше нельзя будет переиспользовать, да и попросту маштобировать 
     handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.keyCode !== 13) {
             return;
         }
-
+        
         event.preventDefault();
 
         var val = this.state.value.trim();
